@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import "../../flow/config";
 import { useState, useEffect } from "react";
+import { Container, SimpleGrid, Heading, FormControl, FormLabel, Input, Image, Button } from '@chakra-ui/react';
 import * as fcl from "@onflow/fcl";
 
 export default function Home() {
@@ -56,20 +57,23 @@ export default function Home() {
     return (
       <div>
         <div>Address: {user?.addr ?? "No Address"}</div>
-        <div>Profile Name: {name ?? "--"}</div>
         <div>Transaction Status: {transactionStatus ?? "--"}</div>
-        <button onClick={sendQuery}>Send Query</button>
-        <button onClick={fcl.unauthenticate}>Log Out</button>
+        <Button onClick={sendQuery}>Send Query</Button>
+        <Button onClick={fcl.unauthenticate}>Log Out</Button>
         <br />
         <br />
-        <input placeholder='New Name' value={newURL} onChange={(e) => setNewURL(e.target.value)} />
+        <FormControl mb='3'>
+          <FormLabel htmlFor='URL'>URL</FormLabel>
+          <Input value={newURL} onChange={(e) => setNewURL(e.target.value)} />
+        </FormControl>
+        <Button onClick={executeTransaction}>Execute Transaction</Button>
         <br />
-        <button onClick={executeTransaction}>Execute Transaction</button>
         <br />
-        <br />
-        {urls.map((url, index) => (
-          <img key={index} src={url} alt="Image" width={200} />
-        ))}
+        <SimpleGrid minChildWidth='200px' columns={[4]} spacing={10} mb='10'>
+          {urls.map((url, index) => (
+            <Image key={index} src={url} alt="Image" />
+          ))}
+        </SimpleGrid>
       </div>
     )
   }
@@ -77,24 +81,25 @@ export default function Home() {
   const UnauthenticatedState = () => {
     return (
       <div>
-        <button onClick={fcl.logIn}>Log In</button>
-        <button onClick={fcl.signUp}>Sign Up</button>
+        <Button onClick={fcl.logIn}>Log In</Button>
+        <Button onClick={fcl.signUp}>Sign Up</Button>
       </div>
     )
   }
 
   return (
-    <div>
+    <Container maxW='1100px'>
       <Head>
         <title>FCL Quickstart with NextJS</title>
         <meta name="description" content="My first web3 app on Flow!" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <h1>Flow Image List App</h1>
+
+      <Heading mt="3" mb="5">Flow Image List App</Heading>
       {user.loggedIn
         ? <AuthedState />
         : <UnauthenticatedState />
       }
-    </div>
+    </Container>
   )
 }
