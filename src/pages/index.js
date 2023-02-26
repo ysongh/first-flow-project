@@ -6,77 +6,50 @@ import * as fcl from "@onflow/fcl";
 export default function Home() {
 
   const [user, setUser] = useState({loggedIn: null})
-  const [name, setName] = useState('')
-  const [newName, setNewName] = useState('')
+  const [urls, setURLs] = useState([])
+  const [newURL, setNewURL] = useState('')
   const [transactionStatus, setTransactionStatus] = useState(null)
 
   useEffect(() => fcl.currentUser.subscribe(setUser), [])
 
   const sendQuery = async () => {
-    const profile = await fcl.query({
+    const result = await fcl.query({
       cadence: `
-        import Profile from 0xProfile
+        import ImageList from 0xDeployer
 
-        pub fun main(address: Address): Profile.ReadOnly? {
-          return Profile.read(address)
+        pub fun main(): [String] {
+          return ImageList.urls
         }
       `,
-      args: (arg, t) => [arg(user.addr, t.Address)]
+        args: (arg, t) => []
     })
 
-    setName(profile?.name ?? 'No Profile')
+    setURLs(result)
   }
 
-  const initAccount = async () => {
-    const transactionId = await fcl.mutate({
-      cadence: `
-        import Profile from 0xProfile
-
-        transaction {
-          prepare(account: AuthAccount) {
-            // Only initialize the account if it hasn't already been initialized
-            if (!Profile.check(account.address)) {
-              // This creates and stores the profile in the user's account
-              account.save(<- Profile.new(), to: Profile.privatePath)
-
-              // This creates the public capability that lets applications read the profile's info
-              account.link<&Profile.Base{Profile.Public}>(Profile.publicPath, target: Profile.privatePath)
-            }
-          }
-        }
-      `,
-      payer: fcl.authz,
-      proposer: fcl.authz,
-      authorizations: [fcl.authz],
-      limit: 50
-    })
-
-    const transaction = await fcl.tx(transactionId).onceSealed()
-    console.log(transaction)
-  }
-
-  // NEW
   const executeTransaction = async () => {
     const transactionId = await fcl.mutate({
       cadence: `
-        import Profile from 0xProfile
+      import ImageList from 0xDeployer
 
-        transaction(name: String) {
-          prepare(account: AuthAccount) {
-            account
-              .borrow<&Profile.Base{Profile.Owner}>(from: Profile.privatePath)!
-              .setName(name)
-          }
+      transaction(newURL: String) {
+        prepare(signer: AuthAccount) {
         }
+        execute {
+          ImageList.addURL(newURL: newURL)
+        }
+      }
       `,
-      args: (arg, t) => [arg(newName, t.String)],
-      payer: fcl.authz,
+      args: (arg, t) => [
+        arg(newURL, t.String)
+      ],
       proposer: fcl.authz,
+      payer: fcl.authz,
       authorizations: [fcl.authz],
-      limit: 50
-    })
+      limit: 999
+    });
 
-    fcl.tx(transactionId).subscribe(res => setTransactionStatus(res.status))
+    console.log('Transaction Id', transactionId);
   }
 
   const AuthedState = () => {
@@ -86,13 +59,17 @@ export default function Home() {
         <div>Profile Name: {name ?? "--"}</div>
         <div>Transaction Status: {transactionStatus ?? "--"}</div>
         <button onClick={sendQuery}>Send Query</button>
-        <button onClick={initAccount}>Init Account</button>
         <button onClick={fcl.unauthenticate}>Log Out</button>
         <br />
         <br />
-        <input placeholder='New Name' value={newName} onChange={(e) => setNewName(e.target.value)} />
+        <input placeholder='New Name' value={newURL} onChange={(e) => setNewURL(e.target.value)} />
         <br />
         <button onClick={executeTransaction}>Execute Transaction</button>
+        <br />
+        <br />
+        {urls.map((url, index) => (
+          <img key={index} src={url} alt="Image" width={200} />
+        ))}
       </div>
     )
   }
@@ -113,7 +90,7 @@ export default function Home() {
         <meta name="description" content="My first web3 app on Flow!" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <h1>Flow App</h1>
+      <h1>Flow Image List App</h1>
       {user.loggedIn
         ? <AuthedState />
         : <UnauthenticatedState />
