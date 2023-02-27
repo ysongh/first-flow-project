@@ -1,8 +1,10 @@
 import Head from 'next/head'
-import "../../flow/config";
 import { useState, useEffect } from "react";
-import { Container, SimpleGrid, Heading, FormControl, FormLabel, Input, Image, Button } from '@chakra-ui/react';
+import { Container, SimpleGrid, FormControl, FormLabel, Input, Image, Button } from '@chakra-ui/react';
 import * as fcl from "@onflow/fcl";
+
+import "../../flow/config";
+import Navbar from 'components/Navbar';
 
 export default function Home() {
 
@@ -88,14 +90,14 @@ export default function Home() {
   }
 
   return (
-    <Container maxW='1100px'>
+    <Container maxW='1200px'>
       <Head>
-        <title>FCL Quickstart with NextJS</title>
-        <meta name="description" content="My first web3 app on Flow!" />
-        <link rel="icon" href="/favicon.png" />
+        <title>Flow Image List App</title>
+        <meta name="description" content="Flow Image List App" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Heading mt="3" mb="5">Flow Image List App</Heading>
+      <Navbar />
       {user.loggedIn
         ? <AuthedState />
         : <UnauthenticatedState />
