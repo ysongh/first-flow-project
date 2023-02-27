@@ -12,8 +12,13 @@ export default function Home() {
   const [urls, setURLs] = useState([])
   const [newURL, setNewURL] = useState('')
   const [transactionStatus, setTransactionStatus] = useState(null)
+  const [loading, setLoading] = useState(false)
+
 
   useEffect(() => fcl.currentUser.subscribe(setUser), [])
+  useEffect(() => {
+    setLoading(true);
+  }, [])
 
   const sendQuery = async () => {
     const result = await fcl.query({
@@ -97,11 +102,14 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar />
-      {user.loggedIn
-        ? <AuthedState />
-        : <UnauthenticatedState />
-      }
+      {loading && <>
+        <Navbar />
+        {user.loggedIn
+          ? <AuthedState />
+          : <UnauthenticatedState />
+        }
+      </>}
+     
     </Container>
   )
 }
