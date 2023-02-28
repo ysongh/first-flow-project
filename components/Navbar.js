@@ -15,6 +15,9 @@ function Navbar({ user }) {
           <NextLink href='/' passHref>
             <Link>Home</Link>
           </NextLink>
+          <NextLink href='/image-list' passHref>
+            <Link>Images</Link>
+          </NextLink>
           <Spacer />
           {!user?.loggedIn
             ? <>

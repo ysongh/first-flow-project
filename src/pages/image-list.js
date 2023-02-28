@@ -5,7 +5,7 @@ import * as fcl from "@onflow/fcl";
 
 import "../../flow/config";
 
-export default function Home({ user }) {
+export default function ImageList({ user }) {
 
   const [urls, setURLs] = useState([])
   const [newURL, setNewURL] = useState('')
