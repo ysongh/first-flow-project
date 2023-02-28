@@ -4,21 +4,12 @@ import { Container, SimpleGrid, FormControl, FormLabel, Input, Image, Button } f
 import * as fcl from "@onflow/fcl";
 
 import "../../flow/config";
-import Navbar from 'components/Navbar';
 
-export default function Home() {
+export default function Home({ user }) {
 
-  const [user, setUser] = useState({loggedIn: null})
   const [urls, setURLs] = useState([])
   const [newURL, setNewURL] = useState('')
   const [transactionStatus, setTransactionStatus] = useState(null)
-  const [loading, setLoading] = useState(false)
-
-
-  useEffect(() => fcl.currentUser.subscribe(setUser), [])
-  useEffect(() => {
-    setLoading(true);
-  }, [])
 
   const sendQuery = async () => {
     const result = await fcl.query({
@@ -101,14 +92,10 @@ export default function Home() {
         <meta name="description" content="Flow Image List App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      {loading && <>
-        <Navbar />
         {user.loggedIn
           ? <AuthedState />
           : <UnauthenticatedState />
         }
-      </>}
      
     </Container>
   )
