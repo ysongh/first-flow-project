@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider>
       {loading && <>
-        <Navbar />
+        <Navbar user={user} />
         <Component
           user={user}
           {...pageProps} />

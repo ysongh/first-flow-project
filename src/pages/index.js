@@ -54,10 +54,8 @@ export default function Home({ user }) {
   const AuthedState = () => {
     return (
       <div>
-        <div>Address: {user?.addr ?? "No Address"}</div>
         <div>Transaction Status: {transactionStatus ?? "--"}</div>
         <Button onClick={sendQuery}>Send Query</Button>
-        <Button onClick={fcl.unauthenticate}>Log Out</Button>
         <br />
         <br />
         <FormControl mb='3'>
@@ -79,8 +77,7 @@ export default function Home({ user }) {
   const UnauthenticatedState = () => {
     return (
       <div>
-        <Button onClick={fcl.logIn}>Log In</Button>
-        <Button onClick={fcl.signUp}>Sign Up</Button>
+        <p>Connect to Wallet</p>
       </div>
     )
   }
