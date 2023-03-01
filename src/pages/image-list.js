@@ -1,11 +1,13 @@
 import Head from 'next/head'
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useRouter } from 'next/router';
 import { Container, SimpleGrid, FormControl, FormLabel, Input, Image, Button } from '@chakra-ui/react';
 import * as fcl from "@onflow/fcl";
 
 import "../../flow/config";
 
 export default function ImageList({ user }) {
+  const router = useRouter();
 
   const [urls, setURLs] = useState([])
   const [newURL, setNewURL] = useState('')
@@ -26,31 +28,6 @@ export default function ImageList({ user }) {
     setURLs(result)
   }
 
-  const executeTransaction = async () => {
-    const transactionId = await fcl.mutate({
-      cadence: `
-      import ImageList from 0xDeployer
-
-      transaction(newURL: String) {
-        prepare(signer: AuthAccount) {
-        }
-        execute {
-          ImageList.addURL(newURL: newURL)
-        }
-      }
-      `,
-      args: (arg, t) => [
-        arg(newURL, t.String)
-      ],
-      proposer: fcl.authz,
-      payer: fcl.authz,
-      authorizations: [fcl.authz],
-      limit: 999
-    });
-
-    console.log('Transaction Id', transactionId);
-  }
-
   const AuthedState = () => {
     return (
       <div>
@@ -58,11 +35,9 @@ export default function ImageList({ user }) {
         <Button onClick={sendQuery}>Send Query</Button>
         <br />
         <br />
-        <FormControl mb='3'>
-          <FormLabel htmlFor='URL'>URL</FormLabel>
-          <Input value={newURL} onChange={(e) => setNewURL(e.target.value)} />
-        </FormControl>
-        <Button onClick={executeTransaction}>Execute Transaction</Button>
+        <Button onClick={() => router.push("/add-image")}>
+          Add Image
+        </Button>
         <br />
         <br />
         <SimpleGrid minChildWidth='200px' columns={[4]} spacing={10} mb='10'>
