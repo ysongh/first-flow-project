@@ -2,15 +2,35 @@ import { useState } from "react";
 import { useRouter } from 'next/router';
 import { Container, FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
 import * as fcl from "@onflow/fcl";
+import axios from "axios"
 
 import "../../flow/config";
 
 export default function AddImage() {
   const router = useRouter();
 
-  const [newURL, setNewURL] = useState('')
+  const [photo, setPhoto] = useState(null)
+
+  const handleUpload = async (event) => {
+    const image = event.target.files[0];
+    console.log(image);
+    setPhoto(image);
+  }
 
   const executeTransaction = async () => {
+    let data = new FormData()
+    data.append('file', photo)
+    const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", data, {
+      maxContentLength: "Infinity",
+      headers: {
+        "Content-Type": 'multipart/form-data',
+        pinata_api_key: process.env.NEXT_PUBLIC_PINATA_APIKEY, 
+        pinata_secret_api_key: process.env.NEXT_PUBLIC_PINATA_SECRETAPIKEY,
+      }
+    })
+
+    let url = "https://gateway.pinata.cloud/ipfs/" + res.data.IpfsHash
+    console.log(url)
     const transactionId = await fcl.mutate({
       cadence: `
       import ImageList from 0xDeployer
@@ -24,7 +44,7 @@ export default function AddImage() {
       }
       `,
       args: (arg, t) => [
-        arg(newURL, t.String)
+        arg(url, t.String)
       ],
       proposer: fcl.authz,
       payer: fcl.authz,
@@ -39,8 +59,8 @@ export default function AddImage() {
   return (
     <Container maxW='1200px'>
       <FormControl mb='3'>
-        <FormLabel htmlFor='URL'>URL</FormLabel>
-        <Input value={newURL} onChange={(e) => setNewURL(e.target.value)} />
+        <FormLabel htmlFor='description'>Choose Photo</FormLabel>
+        <input type='file' id='photo' onChange={handleUpload}/>
       </FormControl>
 
       <Button onClick={executeTransaction}>Add</Button>
