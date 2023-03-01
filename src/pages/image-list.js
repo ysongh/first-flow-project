@@ -31,7 +31,7 @@ export default function ImageList() {
 
   return (
     <Container maxW='1200px'>
-      <Button onClick={() => router.push("/add-image")} mb="5">
+      <Button bgColor="#17b3c1" color="white" onClick={() => router.push("/add-image")} mb="5">
         Add Image
       </Button>
       <SimpleGrid minChildWidth='200px' columns={[4]} spacing={10} mb='10'>

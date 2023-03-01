@@ -21,12 +21,12 @@ function Navbar({ user }) {
           <Spacer />
           {!user?.loggedIn
             ? <>
-              <Button onClick={fcl.logIn}>Log In</Button>
-              <Button onClick={fcl.signUp}>Sign Up</Button>
+              <Button bgColor="#17b3c1" color="white" onClick={fcl.logIn}>Log In</Button>
+              <Button bgColor="#47d6b6" color="white" onClick={fcl.signUp}>Sign Up</Button>
             </>
             : <>
               <div>{user?.addr ?? "No Address"}</div>
-              <Button onClick={fcl.unauthenticate}>Log Out</Button>
+              <Button bgColor="red.400" onClick={fcl.unauthenticate}>Log Out</Button>
             </>
           }
         </Flex>

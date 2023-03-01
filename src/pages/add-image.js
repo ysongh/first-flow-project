@@ -68,7 +68,7 @@ export default function AddImage() {
 
           {photo && <Image src={URL.createObjectURL(photo)} alt="Upload Image" /> }
 
-          <Button mt="4" onClick={executeTransaction}>Add</Button>
+          <Button bgColor="#17b3c1" color="white" mt="4" onClick={executeTransaction}>Add</Button>
         </Box>
       </Center>
     </Container>

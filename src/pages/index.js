@@ -12,8 +12,8 @@ export default function Home({ user }) {
       </Text>
       <Center mt="4">
         { !user.loggedIn
-          ? <Button>Connect Wallet</Button>
-          : <Button onClick={() => router.push("/image-list")}>
+          ? <Button bgColor="#17b3c1" color="white">Connect Wallet</Button>
+          : <Button bgColor="#17b3c1" color="white" onClick={() => router.push("/image-list")}>
               See Images
             </Button>
         }
