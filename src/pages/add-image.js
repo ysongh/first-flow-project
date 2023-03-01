@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from 'next/router';
-import { Container, FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
+import { Container, FormControl, FormLabel, Image, Button } from '@chakra-ui/react';
 import * as fcl from "@onflow/fcl";
 import axios from "axios"
 
@@ -62,6 +62,8 @@ export default function AddImage() {
         <FormLabel htmlFor='description'>Choose Photo</FormLabel>
         <input type='file' id='photo' onChange={handleUpload}/>
       </FormControl>
+
+      {photo && <Image src={URL.createObjectURL(photo)} alt="Upload Image" /> }
 
       <Button onClick={executeTransaction}>Add</Button>
     </Container>
