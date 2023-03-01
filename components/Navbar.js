@@ -9,7 +9,7 @@ function Navbar({ user }) {
         <Flex minWidth='max-content' alignItems='center' gap='2'>
           <Box mr="4">
             <NextLink href='/' passHref >
-              <Heading color="blue" mt="3" mb="5">Flow Image List App</Heading>
+              <Heading color="green" mt="3" mb="5">Flow Image List App</Heading>
             </NextLink>
           </Box>
           <NextLink href='/' passHref>
