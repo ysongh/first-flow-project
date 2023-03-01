@@ -34,7 +34,7 @@ export default function ImageList() {
       <Button bgColor="#17b3c1" color="white" onClick={() => router.push("/add-image")} mb="5">
         Add Image
       </Button>
-      <SimpleGrid minChildWidth='200px' columns={[4]} spacing={10} mb='10'>
+      <SimpleGrid minChildWidth='300px' columns={[4]} spacing={10} mb='10'>
         {urls.map((url, index) => (
           <Image key={index} src={url} alt="Image" />
         ))}
